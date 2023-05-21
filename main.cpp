@@ -2,11 +2,29 @@
 #include <fstream>
 #include <string>
 using namespace std;
-#define totalStudents 385
-void seperator()
-{
-    cout << "*********************************************" << endl;
-}
+
+/* ************* declaration functions ************* */
+
+void seperator();              // line seperator
+void getStudents();            // fills data in students variable
+void splitData(string, int);   // splits the student data from file and adds to students variable
+void auth(int);                // call respecitive auth function
+void studentAuth();            // middleware for student auth
+void teacherAuth();            // middleware for teacher auth
+int passCheck(string, string); // checks for passmatch and returns 1 if matched else 0
+
+/* ************* end of function declaration ************* */
+
+/* ************* declaring classes ************* */
+
+class Class;
+class Student;
+class Teacher;
+
+/* ************* end of class declaration ************* */
+
+/* ************* defining classes ************* */
+
 class Class
 {
 protected:
@@ -46,7 +64,58 @@ class Teacher : public Class
     string name;
 };
 
+/* ************* end of class definition ************* */
+
+/* ************* defining global variables ************* */
+
+#define totalStudents 385
 Student students[totalStudents];
+Student currentStudent;
+Teacher currentTeacher;
+
+/* ************* global variables end ************* */
+
+int main()
+{
+    getStudents();
+    int choice;
+    seperator();
+    cout << "Are you a stuedent or a teacher?" << endl
+         << "1. Teacher" << endl
+         << "2. Student" << endl
+         << "3 Exit" << endl;
+    cout << "Enter your choice: ";
+    cin >> choice;
+    seperator();
+    if (choice == 3)
+        return 0;
+    if (choice != 1 and choice != 2)
+        cout << "Invalid choice" << endl;
+    else
+        auth(choice);
+    return 0;
+}
+
+/* ************* defining functions ************* */
+
+void seperator()
+{
+    cout << "*********************************************" << endl;
+}
+
+void getStudents()
+{
+    string line;
+    ifstream fin;
+    string lines[totalStudents];
+    fin.open("student-record.csv");
+    int i = 0;
+    while (getline(fin, line))
+        lines[i++] = line;
+    for (int j = 0; j < totalStudents; j++)
+        splitData(lines[j], j);
+    fin.close();
+}
 
 void splitData(string s, int n)
 {
@@ -62,18 +131,53 @@ void splitData(string s, int n)
     students[n].addData(data);
 }
 
-void getStudents()
+void auth(int choice)
 {
-    string line;
+    if (choice == 1)
+        teacherAuth();
+    else
+        studentAuth();
+}
+
+void studentAuth()
+{
+    string reg, pass;
+    int res;
+    cout << "Enter your reg number: ";
+    cin >> reg;
+    int found = -1;
+    for (int i = 0; i < totalStudents; i++)
+        if (students[i].getReg() == reg)
+        {
+            found = i;
+            break;
+        }
+    if (found == -1)
+        cout << "Student record not found please check your reg number" << endl;
     ifstream fin;
     string lines[totalStudents];
-    fin.open("student-record.csv");
+    string line;
+    fin.open("student-auth.csv");
     int i = 0;
     while (getline(fin, line))
-        lines[i++] = line;
-    for (int j = 0; j < totalStudents; j++)
-        splitData(lines[j], j);
+    {
+        if (i == found)
+        {
+            res = passCheck(line, reg);
+            if (res)
+            {
+                currentStudent = students[i];
+                cout << "Welcome " << currentStudent.getName() << endl;
+            };
+        }
+        i++;
+    }
     fin.close();
+    seperator();
+}
+
+void teacherAuth()
+{
 }
 
 int passCheck(string line, string id)
@@ -104,68 +208,4 @@ int passCheck(string line, string id)
     }
     return 0;
 }
-
-void studentAuth()
-{
-    string reg, pass;
-    int res;
-    cout << "Enter your reg number: ";
-    cin >> reg;
-    int found = -1;
-    for (int i = 0; i < totalStudents; i++)
-        if (students[i].getReg() == reg)
-        {
-            found = i;
-            break;
-        }
-    if (found == -1)
-        cout << "Student record not found please check your reg number" << endl;
-    ifstream fin;
-    string lines[totalStudents];
-    string line;
-    fin.open("student-auth.csv");
-    int i = 0;
-    while (getline(fin, line))
-    {
-        if (i == found)
-        {
-            res = passCheck(line, reg);
-            if (res)
-                cout << "Welcome " << students[i].getName() << endl;
-        }
-        i++;
-    }
-    fin.close();
-    seperator();
-}
-void teacherAuth()
-{
-}
-void auth(int choice)
-{
-    if (choice == 1)
-        teacherAuth();
-    else
-        studentAuth();
-}
-
-int main()
-{
-    getStudents();
-    int choice;
-    seperator();
-    cout << "Are you a stuedent or a teacher?" << endl
-         << "1. Teacher" << endl
-         << "2. Student" << endl
-         << "3 Exit" << endl;
-    cout << "Enter your choice: ";
-    cin >> choice;
-    seperator();
-    if (choice == 3)
-        return 0;
-    if (choice != 1 and choice != 2)
-        cout << "Invalid choice" << endl;
-    else
-        auth(choice);
-    return 0;
-}
+/* ************* end of function definitions ************* */
