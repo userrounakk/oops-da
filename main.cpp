@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 using namespace std;
+#define totalStudents 385
 void seperator()
 {
     cout << "*********************************************" << endl;
@@ -33,6 +34,10 @@ public:
     {
         return name;
     }
+    string getReg()
+    {
+        return reg;
+    }
 };
 
 class Teacher : public Class
@@ -41,7 +46,7 @@ class Teacher : public Class
     string name;
 };
 
-Student students[385];
+Student students[totalStudents];
 
 void splitData(string s, int n)
 {
@@ -61,12 +66,12 @@ void getStudents()
 {
     string line;
     ifstream fin;
-    string lines[385];
+    string lines[totalStudents];
     fin.open("student-record.csv");
     int i = 0;
     while (getline(fin, line))
         lines[i++] = line;
-    for (int j = 0; j < 385; j++)
+    for (int j = 0; j < totalStudents; j++)
         splitData(lines[j], j);
     fin.close();
 }
@@ -106,25 +111,29 @@ void studentAuth()
     int res;
     cout << "Enter your reg number: ";
     cin >> reg;
+    int found = -1;
+    for (int i = 0; i < totalStudents; i++)
+        if (students[i].getReg() == reg)
+        {
+            found = i;
+            break;
+        }
+    if (found == -1)
+        cout << "Student record not found please check your reg number" << endl;
     ifstream fin;
-    string lines[385];
+    string lines[totalStudents];
     string line;
     fin.open("student-auth.csv");
     int i = 0;
     while (getline(fin, line))
-        lines[i++] = line;
-    for (int j = 0; j < 385; j++)
     {
-        res = passCheck(lines[j], reg);
-        if (res)
+        if (i == found)
         {
-            cout << "Welcome " << students[j].getName() << endl;
-            break;
+            res = passCheck(line, reg);
+            if (res)
+                cout << "Welcome " << students[i].getName() << endl;
         }
-    }
-    if (!res)
-    {
-        cout << "Student record not found please check your reg number" << endl;
+        i++;
     }
     fin.close();
     seperator();
