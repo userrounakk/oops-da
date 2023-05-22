@@ -29,6 +29,10 @@ class Teacher;
 
 /* ************* defining classes ************* */
 
+/*
+ * TODO: Use scope resolution and define class at bottom
+ */
+
 class Class
 {
 protected:
@@ -84,8 +88,6 @@ public:
         emp_id = data[0];
         name = data[1];
         id = to_string(n + 1);
-        // TODO: Solve error
-        // cout << 35 * (10 - n - 1) << " - " << 35 * (10 - n) << endl;
         for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
         {
             // cout << students[i].getClass() << endl;
