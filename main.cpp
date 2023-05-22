@@ -93,6 +93,10 @@ public:
                 myStudents[studentCount++] = students[i];
         }
     }
+    string getEmpId()
+    {
+        return emp_id;
+    }
     string getName()
     {
         return name;
@@ -219,7 +223,6 @@ void studentAuth()
     if (found == -1)
         cout << "Student record not found please check your reg number" << endl;
     ifstream fin;
-    string lines[totalStudents];
     string line;
     fin.open("student-auth.csv");
     int i = 0;
@@ -242,6 +245,38 @@ void studentAuth()
 
 void teacherAuth()
 {
+    string emp_id, pass;
+    int res;
+    cout << "Enter your Employee Id number: ";
+    cin >> emp_id;
+    int found = -1;
+    for (int i = 0; i < 10; i++)
+        if (teachers[i].getEmpId() == emp_id)
+        {
+            found = i;
+            break;
+        }
+    if (found == -1)
+        cout << "Teacher record not found please check your Employee Id number" << endl;
+    ifstream fin;
+    string line;
+    fin.open("teacher-auth.csv");
+    int i = 0;
+    while (getline(fin, line))
+    {
+        if (i == found)
+        {
+            res = passCheck(line, emp_id);
+            if (res)
+            {
+                currentTeacher = teachers[i];
+                cout << "Welcome " << currentTeacher.getName() << endl;
+            };
+        }
+        i++;
+    }
+    fin.close();
+    seperator();
 }
 
 int passCheck(string line, string id)
