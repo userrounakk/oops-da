@@ -1,17 +1,21 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#define totalStudents 350
 using namespace std;
 
 /* ************* declaration functions ************* */
 
-void seperator();              // line seperator
-void getStudents();            // fills data in students variable
-void splitData(string, int);   // splits the student data from file and adds to students variable
-void auth(int);                // call respecitive auth function
-void studentAuth();            // middleware for student auth
-void teacherAuth();            // middleware for teacher auth
-int passCheck(string, string); // checks for passmatch and returns 1 if matched else 0
+void seperator();                   // line seperator
+void getStudents();                 // fills data in students variable
+void getTeachers();                 // fils data in teachers variable
+void splitStudentData(string, int); // splits the student data from file and adds to students variable
+void splitTeacherData(string, int); // splits the teacher data from file and adds to teachers variable
+void auth(int);                     // call respecitive auth function
+void studentAuth();                 // middleware for student auth
+void teacherAuth();                 // middleware for teacher auth
+int passCheck(string, string);      // checks for passmatch and returns 1 if matched else 0
+string trimfnc(string);
 
 /* ************* end of function declaration ************* */
 
@@ -56,20 +60,57 @@ public:
     {
         return reg;
     }
+    string getClass()
+    {
+        return id;
+    }
 };
 
+Student students[totalStudents];
 class Teacher : public Class
 {
-    int emp_id;
+    string emp_id;
     string name;
+    int studentCount;
+    Student myStudents[35];
+
+public:
+    Teacher()
+    {
+        studentCount = 0;
+    }
+    void addData(string data[], int n)
+    {
+        emp_id = data[0];
+        name = data[1];
+        id = to_string(n + 1);
+        // TODO: Solve error
+        // cout << 35 * (10 - n - 1) << " - " << 35 * (10 - n) << endl;
+        for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
+        {
+            // cout << students[i].getClass() << endl;
+            if ((students[i].getClass()) == (id))
+                myStudents[studentCount++] = students[i];
+        }
+    }
+    string getName()
+    {
+        return name;
+    }
+    void showStudents()
+    {
+        for (int i = 0; i < studentCount; i++)
+        {
+            cout << i + 1 << " " << myStudents[i].getName() << endl;
+        }
+    }
 };
 
 /* ************* end of class definition ************* */
 
 /* ************* defining global variables ************* */
 
-#define totalStudents 385
-Student students[totalStudents];
+Teacher teachers[10];
 Student currentStudent;
 Teacher currentTeacher;
 
@@ -78,6 +119,7 @@ Teacher currentTeacher;
 int main()
 {
     getStudents();
+    getTeachers();
     int choice;
     seperator();
     cout << "Are you a stuedent or a teacher?" << endl
@@ -107,17 +149,25 @@ void getStudents()
 {
     string line;
     ifstream fin;
-    string lines[totalStudents];
     fin.open("student-record.csv");
     int i = 0;
     while (getline(fin, line))
-        lines[i++] = line;
-    for (int j = 0; j < totalStudents; j++)
-        splitData(lines[j], j);
+        splitStudentData(line, i++);
     fin.close();
 }
 
-void splitData(string s, int n)
+void getTeachers()
+{
+    string line;
+    ifstream fin;
+    fin.open("teacher-record.csv");
+    int i = 0;
+    while (getline(fin, line))
+        splitTeacherData(line, i++);
+    fin.close();
+}
+
+void splitStudentData(string s, int n)
 {
     string data[8];
     int i = 0;
@@ -129,6 +179,20 @@ void splitData(string s, int n)
         data[i++] = s.substr(start, end - start);
     } while (end != -1);
     students[n].addData(data);
+}
+
+void splitTeacherData(string s, int n)
+{
+    string data[3];
+    int i = 0;
+    int start, end = -1;
+    do
+    {
+        start = end + 1;
+        end = s.find(",", start);
+        data[i++] = s.substr(start, end == -1 ? end - start + 1 : end - start);
+    } while (end != -1);
+    teachers[n].addData(data, n);
 }
 
 void auth(int choice)
@@ -207,5 +271,12 @@ int passCheck(string line, string id)
         }
     }
     return 0;
+}
+string trimfnc(string str)
+{
+    const char *typeOfWhitespaces = " \t\n\r\f\v";
+    str.erase(str.find_last_not_of(typeOfWhitespaces) + 1);
+    str.erase(0, str.find_first_not_of(typeOfWhitespaces));
+    return str;
 }
 /* ************* end of function definitions ************* */
