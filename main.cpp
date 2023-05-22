@@ -247,7 +247,7 @@ void teacherAuth()
 {
     string emp_id, pass;
     int res;
-    cout << "Enter your Employee Id number: ";
+    cout << "Enter your Employee Id: ";
     cin >> emp_id;
     int found = -1;
     for (int i = 0; i < 10; i++)
@@ -257,7 +257,7 @@ void teacherAuth()
             break;
         }
     if (found == -1)
-        cout << "Teacher record not found please check your Employee Id number" << endl;
+        cout << "Teacher record not found please check your Employee Id" << endl;
     ifstream fin;
     string line;
     fin.open("teacher-auth.csv");
