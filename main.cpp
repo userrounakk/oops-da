@@ -16,7 +16,8 @@ void auth(int);                     // call respecitive auth function
 void studentAuth();                 // middleware for student auth
 void teacherAuth();                 // middleware for teacher auth
 int passCheck(string, string);      // checks for passmatch and returns 1 if matched else 0
-string trimfnc(string);
+float mean(int data[], int n);
+float sd(int data[], int n);
 
 /* ************* end of function declaration ************* */
 
@@ -310,11 +311,19 @@ int passCheck(string line, string id)
     }
     return 0;
 }
-string trimfnc(string str)
+float mean(int data[], int n)
 {
-    const char *typeOfWhitespaces = " \t\n\r\f\v";
-    str.erase(str.find_last_not_of(typeOfWhitespaces) + 1);
-    str.erase(0, str.find_first_not_of(typeOfWhitespaces));
-    return str;
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+        sum += data[i];
+    return sum / n;
+}
+float sd(int data[], int n)
+{
+    float m = mean(data, n);
+    float sum;
+    for (int i = 0; i < n; i++)
+        sum += pow(m - data[i], 2);
+    return sqrt(sum / n);
 }
 /* ************* end of function definitions ************* */
