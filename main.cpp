@@ -7,17 +7,20 @@ using namespace std;
 
 /* ************* declaration functions ************* */
 
-void seperator();                   // line seperator
-void getStudents();                 // fills data in students variable
-void getTeachers();                 // fils data in teachers variable
-void splitStudentData(string, int); // splits the student data from file and adds to students variable
-void splitTeacherData(string, int); // splits the teacher data from file and adds to teachers variable
-void auth(int);                     // call respecitive auth function
-void studentAuth();                 // middleware for student auth
-void teacherAuth();                 // middleware for teacher auth
-int passCheck(string, string);      // checks for passmatch and returns 1 if matched else 0
-float mean(int data[], int n);      // calculate mean of data
-float sd(int data[], int n);        // calculate sd of data
+void seperator();                                     // line seperator
+void getStudents();                                   // fills data in students variable
+void getTeachers();                                   // fils data in teachers variable
+void splitStudentData(string, int);                   // splits the student data from file and adds to students variable
+void splitTeacherData(string, int);                   // splits the teacher data from file and adds to teachers variable
+void auth(int);                                       // call respecitive auth function
+void studentAuth();                                   // middleware for student auth
+void teacherAuth();                                   // middleware for teacher auth
+int passCheck(string, string);                        // checks for passmatch and returns 1 if matched else 0
+float mean(int data[], int n);                        // calculate mean of data
+float sd(int data[], int n);                          // calculate sd of data
+int calculateGradePoint(int marks, int mean, int sd); // calculate grade point
+char calculateGrade(int gradePoint);                  // calculate grade
+void showMarks();                                     // display marks of all students of a class
 
 /* ************* end of function declaration ************* */
 
@@ -48,9 +51,9 @@ class Student : public Class
 
     string reg;
     string name;
-    float marks[5];
 
 public:
+    float marks[5];
     void addData(string data[])
     {
         reg = data[0];
@@ -79,9 +82,9 @@ class Teacher : public Class
     string emp_id;
     string name;
     int studentCount;
-    Student myStudents[35];
 
 public:
+    Student myStudents[35];
     Teacher()
     {
         studentCount = 0;
@@ -282,6 +285,7 @@ void teacherAuth()
     }
     fin.close();
     seperator();
+    showMarks();
 }
 
 int passCheck(string line, string id)
@@ -314,7 +318,7 @@ int passCheck(string line, string id)
 }
 float mean(int data[], int n)
 {
-    int sum = 0;
+    float sum = 0;
     for (int i = 0; i < n; i++)
         sum += data[i];
     return sum / n;
@@ -325,6 +329,84 @@ float sd(int data[], int n)
     float sum;
     for (int i = 0; i < n; i++)
         sum += pow(m - data[i], 2);
-    return sqrt(sum / n);
+    return sqrt(sum / (n - 1));
+}
+int calculateGradePoint(int marks, int mean, int sd)
+{
+    if (marks >= ceil(mean + 1.5 * sd))
+        return 10;
+    else if (marks >= ceil(mean + .5 * sd))
+        return 9;
+    else if (marks >= ceil(mean - .5 * sd))
+        return 8;
+    else if (marks >= ceil(mean - sd))
+        return 7;
+    else if (marks >= ceil(mean - 1.5 * sd))
+        return 6;
+    else if (marks >= ceil(mean - 2 * sd))
+        return 5;
+    return 0;
+}
+
+char calculateGrade(int gradePoint)
+{
+    char grades[] = {'S', 'A', 'B', 'C', 'D', 'E'};
+    return gradePoint == 0 ? 'F' : grades[10 - gradePoint];
+}
+
+void showMarks()
+{
+    int marks[5][35];
+    float avg[5];
+    float sdData[5];
+    int grade[35][5];
+    float gpa[35];
+    for (int i = 0; i < 35; i++)
+    {
+        marks[0][i] = currentTeacher.myStudents[i].marks[0];
+        marks[1][i] = currentTeacher.myStudents[i].marks[1];
+        marks[2][i] = currentTeacher.myStudents[i].marks[2];
+        marks[3][i] = currentTeacher.myStudents[i].marks[3];
+        marks[4][i] = currentTeacher.myStudents[i].marks[4];
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        avg[i] = mean(marks[i], 35);
+        sdData[i] = sd(marks[i], 35);
+    }
+    for (int i = 0; i < 35; i++)
+    {
+        grade[i][0] = calculateGradePoint(currentTeacher.myStudents[i].marks[0], avg[0], sdData[0]);
+        grade[i][1] = calculateGradePoint(currentTeacher.myStudents[i].marks[1], avg[1], sdData[1]);
+        grade[i][2] = calculateGradePoint(currentTeacher.myStudents[i].marks[2], avg[2], sdData[2]);
+        grade[i][3] = calculateGradePoint(currentTeacher.myStudents[i].marks[3], avg[3], sdData[3]);
+        grade[i][4] = calculateGradePoint(currentTeacher.myStudents[i].marks[4], avg[4], sdData[4]);
+        gpa[i] = mean(grade[i], 5);
+    }
+    cout << left << setw(12) << setfill(' ') << "Reg No"
+         << setw(20) << "Name"
+         << "    " << right
+         << setw(10) << "English"
+         << "    "
+         << setw(10) << "Maths"
+         << "    "
+         << setw(10) << "Science"
+         << "    "
+         << setw(10) << "Computer"
+         << "    "
+         << setw(10) << "Social"
+         << setw(10) << "GPA" << endl;
+    for (int i = 0; i < 35; i++)
+    {
+        Student s = currentTeacher.myStudents[i];
+        cout << left << setw(12) << setfill(' ') << s.getReg()
+             << setw(20) << s.getName() << right
+             << setw(10) << s.marks[0] << " (" << calculateGrade(grade[i][0]) << ")"
+             << setw(10) << s.marks[1] << " (" << calculateGrade(grade[i][1]) << ")"
+             << setw(10) << s.marks[2] << " (" << calculateGrade(grade[i][2]) << ")"
+             << setw(10) << s.marks[3] << " (" << calculateGrade(grade[i][3]) << ")"
+             << setw(10) << s.marks[4] << " (" << calculateGrade(grade[i][4]) << ")"
+             << setw(10) << gpa[i] << endl;
+    }
 }
 /* ************* end of function definitions ************* */
