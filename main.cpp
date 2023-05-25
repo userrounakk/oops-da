@@ -16,8 +16,8 @@ void auth(int);                     // call respecitive auth function
 void studentAuth();                 // middleware for student auth
 void teacherAuth();                 // middleware for teacher auth
 int passCheck(string, string);      // checks for passmatch and returns 1 if matched else 0
-float mean(int data[], int n);
-float sd(int data[], int n);
+float mean(int data[], int n);      // calculate mean of data
+float sd(int data[], int n);        // calculate sd of data
 
 /* ************* end of function declaration ************* */
 
@@ -33,6 +33,7 @@ class Teacher;
 
 /*
  * TODO: Use scope resolution and define class at bottom
+ * TODO: Claculate grade of each student
  */
 
 class Class
