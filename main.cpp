@@ -5,7 +5,7 @@
 #define totalStudents 350
 using namespace std;
 
-/* ************* declaration functions ************* */
+/* ************* function declarations ************* */
 
 void seperator();                                                      // line seperator
 void getStudents();                                                    // fills data in students variable
@@ -24,20 +24,20 @@ void showMarks();                                                      // displa
 void gradeDistribution(string subject, float mean, float sd);          // show grade cut offs for subjects
 void showGradeDistribution(string subjects[], int means[], int sds[]); // layout for grade cut off table
 
-/* ************* end of function declaration ************* */
+/* ************* end of function declarations ************* */
 
-/* ************* declaring classes ************* */
+/* ************* class declarations ************* */
 
 class Class;
 class Student;
 class Teacher;
 
-/* ************* end of class declaration ************* */
+/* ************* end of class declarations ************* */
 
-/* ************* defining classes ************* */
+/* ************* class definitions ************* */
 
 /*
- * TODO: Use scope resolution and define class at bottom
+ * TODO: Use scope resolution and define class functions at bottom
  * TODO: Claculate grade of each student
  */
 
@@ -97,11 +97,8 @@ public:
         name = data[1];
         id = to_string(n + 1);
         for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
-        {
-            // cout << students[i].getClass() << endl;
             if ((students[i].getClass()) == (id))
                 myStudents[studentCount++] = students[i];
-        }
     }
     string getEmpId()
     {
@@ -120,7 +117,7 @@ public:
     }
 };
 
-/* ************* end of class definition ************* */
+/* ************* end of class definitions ************* */
 
 /* ************* defining global variables ************* */
 
