@@ -7,20 +7,22 @@ using namespace std;
 
 /* ************* declaration functions ************* */
 
-void seperator();                                     // line seperator
-void getStudents();                                   // fills data in students variable
-void getTeachers();                                   // fils data in teachers variable
-void splitStudentData(string, int);                   // splits the student data from file and adds to students variable
-void splitTeacherData(string, int);                   // splits the teacher data from file and adds to teachers variable
-void auth(int);                                       // call respecitive auth function
-void studentAuth();                                   // middleware for student auth
-void teacherAuth();                                   // middleware for teacher auth
-int passCheck(string, string);                        // checks for passmatch and returns 1 if matched else 0
-float mean(int data[], int n);                        // calculate mean of data
-float sd(int data[], int n);                          // calculate sd of data
-int calculateGradePoint(int marks, int mean, int sd); // calculate grade point
-char calculateGrade(int gradePoint);                  // calculate grade
-void showMarks();                                     // display marks of all students of a class
+void seperator();                                                      // line seperator
+void getStudents();                                                    // fills data in students variable
+void getTeachers();                                                    // fils data in teachers variable
+void splitStudentData(string, int);                                    // splits the student data from file and adds to students variable
+void splitTeacherData(string, int);                                    // splits the teacher data from file and adds to teachers variable
+void auth(int);                                                        // call respecitive auth function
+void studentAuth();                                                    // middleware for student auth
+void teacherAuth();                                                    // middleware for teacher auth
+int passCheck(string, string);                                         // checks for passmatch and returns 1 if matched else 0
+float mean(int data[], int n);                                         // calculate mean of data
+float sd(int data[], int n);                                           // calculate sd of data
+int calculateGradePoint(int marks, int mean, int sd);                  // calculate grade point
+char calculateGrade(int gradePoint);                                   // calculate grade
+void showMarks();                                                      // display marks of all students of a class
+void gradeDistribution(string subject, float mean, float sd);          // show grade cut offs for subjects
+void showGradeDistribution(string subjects[], int means[], int sds[]); // layout for grade cut off table
 
 /* ************* end of function declaration ************* */
 
@@ -125,6 +127,7 @@ public:
 Teacher teachers[10];
 Student currentStudent;
 Teacher currentTeacher;
+string subjects[] = {"English", "Maths", "Science", "Computer", "Social"};
 
 /* ************* global variables end ************* */
 
@@ -154,7 +157,7 @@ int main()
 
 void seperator()
 {
-    cout << "*********************************************" << endl;
+    cout << "**********************************************************************************************************************" << endl;
 }
 
 void getStudents()
@@ -386,15 +389,15 @@ void showMarks()
     cout << left << setw(12) << setfill(' ') << "Reg No"
          << setw(20) << "Name"
          << "    " << right
-         << setw(10) << "English"
+         << setw(10) << subjects[0]
          << "    "
-         << setw(10) << "Maths"
+         << setw(10) << subjects[1]
          << "    "
-         << setw(10) << "Science"
+         << setw(10) << subjects[2]
          << "    "
-         << setw(10) << "Computer"
+         << setw(10) << subjects[3]
          << "    "
-         << setw(10) << "Social"
+         << setw(10) << subjects[4]
          << setw(10) << "GPA" << endl;
     for (int i = 0; i < 35; i++)
     {
@@ -408,5 +411,37 @@ void showMarks()
              << setw(10) << s.marks[4] << " (" << calculateGrade(grade[i][4]) << ")"
              << setw(10) << gpa[i] << endl;
     }
+}
+
+void gradeDistribution(string subject, float mean, float sd)
+{
+    cout << setw(5) << setfill(' ') << subject
+         << setw(5) << " >= " << ceil(mean + 1.5 * sd)
+         << setw(5) << " >= " << ceil(mean + .5 * sd) << " and < " << ceil(mean + 1.5 * sd)
+         << setw(5) << " >= " << ceil(mean - .5 * sd) << " and < " << ceil(mean + .5 * sd)
+         << setw(5) << " >= " << ceil(mean - sd) << " and < " << ceil(mean - .5 * sd)
+         << setw(5) << " >= " << ceil(mean - 1.5 * sd) << " and < " << ceil(mean - sd)
+         << setw(5) << " >= " << ceil(mean - 2 * sd) << " and < " << ceil(mean - 1.5 * sd)
+         << setw(5) << " <" << ceil(mean - 2 * sd) << endl;
+}
+void showGradeDistribution(string subjects[], int means[], int sds[])
+{
+    cout << setw(5) << setfill(' ') << "Subject"
+         << setw(5) << "      "
+         << "S"
+         << setw(5) << "               "
+         << "A"
+         << setw(5) << "               "
+         << "B"
+         << setw(5) << "               "
+         << "C"
+         << setw(5) << "               "
+         << "D"
+         << setw(5) << "               "
+         << "E"
+         << setw(5) << "F" << endl;
+    for (int i = 0; i < 5; i++)
+        gradeDistribution(subjects[i], means[i], sds[i]);
+    seperator();
 }
 /* ************* end of function definitions ************* */
