@@ -25,6 +25,7 @@ void showMarks(int usertype);                                              // di
 void gradeDistribution(string subject, float mean, float sd);              // show grade cut offs for subjects
 void showGradeDistribution(string subjects[], float means[], float sds[]); // layout for grade cut off table
 void showStatistics();                                                     // show class statistics
+void individualMarks();                                                    // show marks of individual student
 void studentMenu();                                                        // menu options for students
 void teacherMenu();                                                        // menu options for teachers
 
@@ -118,9 +119,19 @@ public:
     }
     void showStudents()
     {
+        cout << " ---------------------------------------" << endl;
+        cout << " | " << left << setw(12) << setfill(' ') << "Reg No"
+             << " | "
+             << setw(20) << "Name"
+             << " | " << endl;
+        cout << " ---------------------------------------" << endl;
         for (int i = 0; i < studentCount; i++)
         {
-            cout << i + 1 << " " << myStudents[i].getName() << endl;
+            cout << " | " << left << setw(12) << setfill(' ') << myStudents[i].getReg()
+                 << " | "
+                 << setw(20) << myStudents[i].getName()
+                 << " | " << endl;
+            cout << " ---------------------------------------" << endl;
         }
     }
 };
@@ -297,13 +308,13 @@ void teacherAuth()
             {
                 currentTeacher = teachers[i];
                 cout << "Welcome " << currentTeacher.getName() << endl;
+                teacherMenu();
+                return;
             };
         }
         i++;
     }
     fin.close();
-    seperator();
-    showMarks(1);
 }
 
 int passCheck(string line, string id)
@@ -407,6 +418,9 @@ void showMarks(int usertype)
 
     if (usertype == 1)
     {
+        cout << endl
+             << "Marks of students of class " << currentTeacher.getId() << endl;
+        cout << endl;
         cout << " -----------------------------------------------------------------------------------------------------------------------------------------" << endl;
         cout << " | " << left << setw(12) << setfill(' ') << "Reg No"
              << " | "
@@ -556,6 +570,27 @@ void showStatistics()
         cout << " -------------------------------------------------------" << endl;
     }
 }
+void individualMarks()
+{
+    string reg;
+    int found = 0;
+    cout << "Enter Student's Registration number: ";
+    cin >> reg;
+    cout << endl;
+    for (int i = 0; i < 35; i++)
+    {
+        if (currentTeacher.myStudents[i].getReg() == reg)
+        {
+            found = 1;
+            currentStudent = currentTeacher.myStudents[i];
+            break;
+        }
+    }
+    if (!found)
+        cout << "No Student with reg number " << reg << " found in your class. Please check the details and try again." << endl;
+    else
+        showMarks(2);
+}
 void studentMenu()
 {
     while (1)
@@ -582,6 +617,45 @@ void studentMenu()
         case 2:
             system("clear");
             showStatistics();
+            break;
+        default:
+            cout << "Invalid choice." << endl;
+            break;
+        }
+    }
+}
+void teacherMenu()
+{
+    while (1)
+    {
+        seperator();
+        int choice;
+        cout << "1. View All Students" << endl;
+        cout << "2. View Class Marks" << endl;
+        cout << "3. View Marks of an individual student" << endl;
+        cout << "4. Edit Marks of a student" << endl;
+        cout << "5. Logout" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        seperator();
+        if (choice == 5)
+        {
+            cout << "Successfully logged out..." << endl;
+            exit(0);
+        }
+        switch (choice)
+        {
+        case 1:
+            system("clear");
+            currentTeacher.showStudents();
+            break;
+        case 2:
+            system("clear");
+            showMarks(1);
+            break;
+        case 3:
+            system("clear");
+            individualMarks();
             break;
         default:
             cout << "Invalid choice." << endl;
