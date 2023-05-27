@@ -20,7 +20,7 @@ float mean(int data[], int n);                                         // calcul
 float sd(int data[], int n);                                           // calculate sd of data
 int calculateGradePoint(int marks, int mean, int sd);                  // calculate grade point
 char calculateGrade(int gradePoint);                                   // calculate grade
-void showMarks();                                                      // display marks of all students of a class
+void showMarks(int usertype);                                          // display marks of all students of a class
 void gradeDistribution(string subject, float mean, float sd);          // show grade cut offs for subjects
 void showGradeDistribution(string subjects[], int means[], int sds[]); // layout for grade cut off table
 
@@ -99,6 +99,10 @@ public:
         for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
             if ((students[i].getClass()) == (id))
                 myStudents[studentCount++] = students[i];
+    }
+    string getId()
+    {
+        return id;
     }
     string getEmpId()
     {
@@ -242,6 +246,12 @@ void studentAuth()
             if (res)
             {
                 currentStudent = students[i];
+                for (int i = 0; i < 10; i++)
+                    if (currentStudent.getClass() == teachers[i].getId())
+                    {
+                        currentTeacher = teachers[i];
+                        break;
+                    }
                 cout << "Welcome " << currentStudent.getName() << endl;
             };
         }
@@ -249,6 +259,7 @@ void studentAuth()
     }
     fin.close();
     seperator();
+    showMarks(2);
 }
 
 void teacherAuth()
@@ -285,7 +296,7 @@ void teacherAuth()
     }
     fin.close();
     seperator();
-    showMarks();
+    showMarks(1);
 }
 
 int passCheck(string line, string id)
@@ -316,6 +327,7 @@ int passCheck(string line, string id)
     }
     return 0;
 }
+
 float mean(int data[], int n)
 {
     float sum = 0;
@@ -323,6 +335,7 @@ float mean(int data[], int n)
         sum += data[i];
     return sum / n;
 }
+
 float sd(int data[], int n)
 {
     float m = mean(data, n);
@@ -331,6 +344,7 @@ float sd(int data[], int n)
         sum += pow(m - data[i], 2);
     return sqrt(sum / (n - 1));
 }
+
 int calculateGradePoint(int marks, int mean, int sd)
 {
     if (marks >= ceil(mean + 1.5 * sd))
@@ -354,7 +368,7 @@ char calculateGrade(int gradePoint)
     return gradePoint == 0 ? 'F' : grades[10 - gradePoint];
 }
 
-void showMarks()
+void showMarks(int usertype)
 {
     int marks[5][35];
     float avg[5];
@@ -383,30 +397,61 @@ void showMarks()
         grade[i][4] = calculateGradePoint(currentTeacher.myStudents[i].marks[4], avg[4], sdData[4]);
         gpa[i] = mean(grade[i], 5);
     }
-    cout << left << setw(12) << setfill(' ') << "Reg No"
-         << setw(20) << "Name"
-         << "    " << right
-         << setw(10) << subjects[0]
-         << "    "
-         << setw(10) << subjects[1]
-         << "    "
-         << setw(10) << subjects[2]
-         << "    "
-         << setw(10) << subjects[3]
-         << "    "
-         << setw(10) << subjects[4]
-         << setw(10) << "GPA" << endl;
-    for (int i = 0; i < 35; i++)
+
+    if (usertype == 1)
     {
-        Student s = currentTeacher.myStudents[i];
-        cout << left << setw(12) << setfill(' ') << s.getReg()
-             << setw(20) << s.getName() << right
-             << setw(10) << s.marks[0] << " (" << calculateGrade(grade[i][0]) << ")"
-             << setw(10) << s.marks[1] << " (" << calculateGrade(grade[i][1]) << ")"
-             << setw(10) << s.marks[2] << " (" << calculateGrade(grade[i][2]) << ")"
-             << setw(10) << s.marks[3] << " (" << calculateGrade(grade[i][3]) << ")"
-             << setw(10) << s.marks[4] << " (" << calculateGrade(grade[i][4]) << ")"
-             << setw(10) << gpa[i] << endl;
+        cout << left << setw(12) << setfill(' ') << "Reg No"
+             << setw(20) << "Name"
+             << "    " << right
+             << setw(10) << subjects[0]
+             << "    "
+             << setw(10) << subjects[1]
+             << "    "
+             << setw(10) << subjects[2]
+             << "    "
+             << setw(10) << subjects[3]
+             << "    "
+             << setw(10) << subjects[4]
+             << setw(10) << "GPA" << endl;
+        for (int i = 0; i < 35; i++)
+        {
+            Student s = currentTeacher.myStudents[i];
+            cout << left << setw(12) << setfill(' ') << s.getReg()
+                 << setw(20) << s.getName() << right
+                 << setw(10) << s.marks[0] << " (" << calculateGrade(grade[i][0]) << ")"
+                 << setw(10) << s.marks[1] << " (" << calculateGrade(grade[i][1]) << ")"
+                 << setw(10) << s.marks[2] << " (" << calculateGrade(grade[i][2]) << ")"
+                 << setw(10) << s.marks[3] << " (" << calculateGrade(grade[i][3]) << ")"
+                 << setw(10) << s.marks[4] << " (" << calculateGrade(grade[i][4]) << ")"
+                 << setw(10) << gpa[i] << endl;
+        }
+    }
+    else if (usertype == 2)
+    {
+        int index;
+        for (int i = 0; i < 35; i++)
+            if (currentStudent.getReg() == currentTeacher.myStudents[i].getReg())
+            {
+                index = i;
+                break;
+            }
+        cout << endl;
+        cout << "Reg No: " << currentStudent.getReg() << endl;
+        cout << "Name: " << currentStudent.getName() << endl;
+        cout << endl;
+        cout
+            << left << setw(15) << setfill(' ') << "Subject"
+            << setw(15) << "Scored Marks" << setw(15) << "Grade Obtained" << endl;
+        cout << left << setw(15) << setfill(' ') << subjects[0]
+             << setw(15) << currentStudent.marks[0] << setw(15) << calculateGrade(grade[index][0]) << endl;
+        cout << setw(15) << subjects[1]
+             << setw(15) << currentStudent.marks[1] << setw(15) << calculateGrade(grade[index][1]) << endl;
+        cout << setw(15) << subjects[2]
+             << setw(15) << currentStudent.marks[2] << setw(15) << calculateGrade(grade[index][2]) << endl;
+        cout << setw(15) << subjects[3]
+             << setw(15) << currentStudent.marks[3] << setw(15) << calculateGrade(grade[index][3]) << endl;
+        cout << setw(15) << subjects[4]
+             << setw(15) << currentStudent.marks[4] << setw(15) << calculateGrade(grade[index][4]) << endl;
     }
 }
 
@@ -421,6 +466,7 @@ void gradeDistribution(string subject, float mean, float sd)
          << setw(5) << " >= " << ceil(mean - 2 * sd) << " and < " << ceil(mean - 1.5 * sd)
          << setw(5) << " <" << ceil(mean - 2 * sd) << endl;
 }
+
 void showGradeDistribution(string subjects[], int means[], int sds[])
 {
     cout << setw(5) << setfill(' ') << "Subject"
