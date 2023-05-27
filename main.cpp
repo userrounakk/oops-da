@@ -26,6 +26,7 @@ void gradeDistribution(string subject, float mean, float sd);              // sh
 void showGradeDistribution(string subjects[], float means[], float sds[]); // layout for grade cut off table
 void showStatistics();                                                     // show class statistics
 void individualMarks();                                                    // show marks of individual student
+void updateMarks();                                                        // update mars of students
 void studentMenu();                                                        // menu options for students
 void teacherMenu();                                                        // menu options for teachers
 
@@ -591,6 +592,92 @@ void individualMarks()
     else
         showMarks(2);
 }
+void updateMarks()
+{
+    string reg;
+    int found = 0;
+    int index;
+    int teacher;
+    Student update;
+    cout << "Enter Student's Registration number: ";
+    cin >> reg;
+    cout << endl;
+    for (int i = 0; i < 35; i++)
+    {
+        if (currentTeacher.myStudents[i].getReg() == reg)
+        {
+            found = 1;
+            teacher = i;
+            break;
+        }
+    }
+    if (!found)
+        cout << "No Student with reg number " << reg << " found in your class. Please check the details and try again." << endl;
+    else
+    {
+        for (int i = 0; i < totalStudents; i++)
+            if (students[i].getReg() == reg)
+            {
+                index = i;
+                update = students[i];
+                break;
+            }
+        while (1)
+        {
+            seperator();
+            int choice;
+            cout << "Select subject to update marks" << endl;
+            for (int i = 0; i < 5; i++)
+                cout << i + 1 << ". " << subjects[i] << endl;
+            cout << "6. Save changes" << endl;
+            cout << "7. Cancel" << endl;
+            cout << "Enter your choice: ";
+            cin >> choice;
+            if (choice == 7)
+                return;
+            if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5)
+            {
+                int marks;
+                cout << "Enter the marks for " << subjects[choice - 1] << ": ";
+                cin >> marks;
+                update.marks[choice - 1] = marks;
+                for (int i = 0; i < 5; i++)
+                {
+                    cout << left << setw(8) << subjects[i] << ": " << update.marks[i] << endl;
+                }
+            }
+            if (choice == 6)
+            {
+                string updated = update.getReg() + "," + update.getName() + "," + update.getClass() + "," + to_string((int)update.marks[0]) + "," + to_string((int)update.marks[1] / 1) + "," + to_string((int)update.marks[2] / 1) + "," + to_string((int)update.marks[3] / 1) + "," + to_string((int)update.marks[4] / 1);
+                ifstream fin;
+                string lines[350];
+                fin.open("student-record.csv");
+                int i = 0;
+                while (getline(fin, lines[i]))
+                    i++;
+                fin.close();
+                ofstream fio;
+                fio.open("student-record.csv");
+                for (int i = 0; i < 350; i++)
+                {
+                    if (i == index)
+                    {
+                        fio << updated << "\n";
+                    }
+                    else
+                    {
+                        fio << lines[i] << "\n";
+                    }
+                }
+                cout << "Changes Saved." << endl;
+                fio.close();
+                students[index] = update;
+                currentTeacher.myStudents[teacher] = update;
+                return;
+            }
+        }
+    }
+}
 void studentMenu()
 {
     while (1)
@@ -656,6 +743,10 @@ void teacherMenu()
         case 3:
             system("clear");
             individualMarks();
+            break;
+        case 4:
+            system("clear");
+            updateMarks();
             break;
         default:
             cout << "Invalid choice." << endl;
