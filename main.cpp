@@ -532,29 +532,67 @@ void showGradeDistribution(string subjects[], float means[], float sds[])
     tableSeperator();
     seperator();
 }
+void showStatistics()
+{
+    int marks[5][35];
+    float avg[5];
+    float sdData[5];
+    for (int i = 0; i < 35; i++)
+    {
+        marks[0][i] = currentTeacher.myStudents[i].marks[0];
+        marks[1][i] = currentTeacher.myStudents[i].marks[1];
+        marks[2][i] = currentTeacher.myStudents[i].marks[2];
+        marks[3][i] = currentTeacher.myStudents[i].marks[3];
+        marks[4][i] = currentTeacher.myStudents[i].marks[4];
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        avg[i] = mean(marks[i], 35);
+        sdData[i] = sd(marks[i], 35);
+    }
+    cout << " -------------------------------------------------------" << endl;
+    cout
+        << " | " << left << setw(15) << setfill(' ') << "Subject"
+        << " | " << setw(15) << "Class Average"
+        << " | " << setw(15) << "SD"
+        << " | " << endl;
+    cout << " -------------------------------------------------------" << endl;
+    for (int i = 0; i < 5; i++)
+    {
+        cout << " | " << left << setw(15) << setfill(' ') << subjects[i]
+             << " | " << setw(15) << avg[i] << " | " << setw(15) << sdData[i] << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+    }
+}
 void studentMenu()
 {
-    seperator();
-    int choice;
-    cout << "1. View My Marks" << endl;
-    cout << "2. View Statistics" << endl;
-    cout << "3. Logout" << endl;
-    cout << "Enter your choice: ";
-    cin >> choice;
-    seperator();
-    if (choice == 3)
+    while (1)
     {
-        cout << "Successfully logged out..." << endl;
-        exit(0);
-    }
-    switch (choice)
-    {
-    case 1:
-        showMarks(2);
-        break;
-    default:
-        cout << "Invalid choice." << endl;
-        break;
+        seperator();
+        int choice;
+        cout << "1. View My Marks" << endl;
+        cout << "2. View Statistics" << endl;
+        cout << "3. Logout" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        seperator();
+        if (choice == 3)
+        {
+            cout << "Successfully logged out..." << endl;
+            exit(0);
+        }
+        switch (choice)
+        {
+        case 1:
+            showMarks(2);
+            break;
+        case 2:
+            showStatistics();
+            break;
+        default:
+            cout << "Invalid choice." << endl;
+            break;
+        }
     }
 }
 /* ************* end of function definitions ************* */
