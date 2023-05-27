@@ -43,7 +43,7 @@ class Teacher;
 
 /*
  * TODO: Use scope resolution and define class functions at bottom
- * TODO: Claculate grade of each student
+ * TODO: Operator overloading
  */
 
 class Class
