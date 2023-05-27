@@ -7,22 +7,26 @@ using namespace std;
 
 /* ************* function declarations ************* */
 
-void seperator();                                                      // line seperator
-void getStudents();                                                    // fills data in students variable
-void getTeachers();                                                    // fils data in teachers variable
-void splitStudentData(string, int);                                    // splits the student data from file and adds to students variable
-void splitTeacherData(string, int);                                    // splits the teacher data from file and adds to teachers variable
-void auth(int);                                                        // call respecitive auth function
-void studentAuth();                                                    // middleware for student auth
-void teacherAuth();                                                    // middleware for teacher auth
-int passCheck(string, string);                                         // checks for passmatch and returns 1 if matched else 0
-float mean(int data[], int n);                                         // calculate mean of data
-float sd(int data[], int n);                                           // calculate sd of data
-int calculateGradePoint(int marks, int mean, int sd);                  // calculate grade point
-char calculateGrade(int gradePoint);                                   // calculate grade
-void showMarks(int usertype);                                          // display marks of all students of a class
-void gradeDistribution(string subject, float mean, float sd);          // show grade cut offs for subjects
-void showGradeDistribution(string subjects[], int means[], int sds[]); // layout for grade cut off table
+void seperator();                                                          // line seperator
+void tableSeperator();                                                     // table line seperator
+void getStudents();                                                        // fills data in students variable
+void getTeachers();                                                        // fils data in teachers variable
+void splitStudentData(string, int);                                        // splits the student data from file and adds to students variable
+void splitTeacherData(string, int);                                        // splits the teacher data from file and adds to teachers variable
+void auth(int);                                                            // call respecitive auth function
+void studentAuth();                                                        // middleware for student auth
+void teacherAuth();                                                        // middleware for teacher auth
+int passCheck(string, string);                                             // checks for passmatch and returns 1 if matched else 0
+float mean(int data[], int n);                                             // calculate mean of data
+float sd(int data[], int n);                                               // calculate sd of data
+int calculateGradePoint(int marks, int mean, int sd);                      // calculate grade point
+char calculateGrade(int gradePoint);                                       // calculate grade
+void showMarks(int usertype);                                              // display marks of all students of a class
+void gradeDistribution(string subject, float mean, float sd);              // show grade cut offs for subjects
+void showGradeDistribution(string subjects[], float means[], float sds[]); // layout for grade cut off table
+void showStatistics();                                                     // show class statistics
+void studentMenu();                                                        // menu options for students
+void teacherMenu();                                                        // menu options for teachers
 
 /* ************* end of function declarations ************* */
 
@@ -138,10 +142,10 @@ int main()
     getTeachers();
     int choice;
     seperator();
-    cout << "Are you a stuedent or a teacher?" << endl
+    cout << "Are you a student or a teacher?" << endl
          << "1. Teacher" << endl
          << "2. Student" << endl
-         << "3 Exit" << endl;
+         << "3. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
     seperator();
@@ -158,9 +162,12 @@ int main()
 
 void seperator()
 {
-    cout << "**********************************************************************************************************************" << endl;
+    cout << "*******************************************************************************************************************************" << endl;
 }
-
+void tableSeperator()
+{
+    cout << "-------------------------------------------------------------------------------------------------------------------------------" << endl;
+}
 void getStudents()
 {
     string line;
@@ -250,16 +257,16 @@ void studentAuth()
                     if (currentStudent.getClass() == teachers[i].getId())
                     {
                         currentTeacher = teachers[i];
-                        break;
+                        fin.close();
+                        cout << "Welcome " << currentStudent.getName() << endl;
+                        studentMenu();
+                        return;
                     }
-                cout << "Welcome " << currentStudent.getName() << endl;
             };
         }
         i++;
     }
     fin.close();
-    seperator();
-    showMarks(2);
 }
 
 void teacherAuth()
@@ -400,30 +407,45 @@ void showMarks(int usertype)
 
     if (usertype == 1)
     {
-        cout << left << setw(12) << setfill(' ') << "Reg No"
+        cout << " -----------------------------------------------------------------------------------------------------------------------------------------" << endl;
+        cout << " | " << left << setw(12) << setfill(' ') << "Reg No"
+             << " | "
              << setw(20) << "Name"
+             << " | "
              << "    " << right
              << setw(10) << subjects[0]
+             << " | "
              << "    "
              << setw(10) << subjects[1]
+             << " | "
              << "    "
              << setw(10) << subjects[2]
+             << " | "
              << "    "
              << setw(10) << subjects[3]
+             << " | "
              << "    "
-             << setw(10) << subjects[4]
-             << setw(10) << "GPA" << endl;
+             << setw(10) << subjects[4] << " | "
+             << setw(10) << "GPA"
+             << " | " << endl;
+        cout << " -----------------------------------------------------------------------------------------------------------------------------------------" << endl;
         for (int i = 0; i < 35; i++)
         {
             Student s = currentTeacher.myStudents[i];
-            cout << left << setw(12) << setfill(' ') << s.getReg()
-                 << setw(20) << s.getName() << right
+            cout << " | " << left << setw(12) << setfill(' ') << s.getReg()
+                 << " | " << setw(20) << s.getName() << " | " << right
                  << setw(10) << s.marks[0] << " (" << calculateGrade(grade[i][0]) << ")"
+                 << " | "
                  << setw(10) << s.marks[1] << " (" << calculateGrade(grade[i][1]) << ")"
+                 << " | "
                  << setw(10) << s.marks[2] << " (" << calculateGrade(grade[i][2]) << ")"
+                 << " | "
                  << setw(10) << s.marks[3] << " (" << calculateGrade(grade[i][3]) << ")"
+                 << " | "
                  << setw(10) << s.marks[4] << " (" << calculateGrade(grade[i][4]) << ")"
-                 << setw(10) << gpa[i] << endl;
+                 << " | "
+                 << setw(10) << gpa[i] << " | " << endl;
+            cout << " -----------------------------------------------------------------------------------------------------------------------------------------" << endl;
         }
     }
     else if (usertype == 2)
@@ -435,56 +457,104 @@ void showMarks(int usertype)
                 index = i;
                 break;
             }
+        cout << left << setw(15) << "Name: " << currentStudent.getName() << endl;
+        cout << left << setw(15) << "Reg No: " << currentStudent.getReg() << endl;
+        cout << left << setw(15) << "Scored GPA: " << gpa[index] << endl;
         cout << endl;
-        cout << "Reg No: " << currentStudent.getReg() << endl;
-        cout << "Name: " << currentStudent.getName() << endl;
-        cout << endl;
+        cout << " -------------------------------------------------------" << endl;
         cout
-            << left << setw(15) << setfill(' ') << "Subject"
-            << setw(15) << "Scored Marks" << setw(15) << "Grade Obtained" << endl;
-        cout << left << setw(15) << setfill(' ') << subjects[0]
-             << setw(15) << currentStudent.marks[0] << setw(15) << calculateGrade(grade[index][0]) << endl;
-        cout << setw(15) << subjects[1]
-             << setw(15) << currentStudent.marks[1] << setw(15) << calculateGrade(grade[index][1]) << endl;
-        cout << setw(15) << subjects[2]
-             << setw(15) << currentStudent.marks[2] << setw(15) << calculateGrade(grade[index][2]) << endl;
-        cout << setw(15) << subjects[3]
-             << setw(15) << currentStudent.marks[3] << setw(15) << calculateGrade(grade[index][3]) << endl;
-        cout << setw(15) << subjects[4]
-             << setw(15) << currentStudent.marks[4] << setw(15) << calculateGrade(grade[index][4]) << endl;
+            << " | " << left << setw(15) << setfill(' ') << "Subject"
+            << " | " << setw(15) << "Scored Marks"
+            << " | " << setw(15) << "Grade Obtained"
+            << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+        cout << " | " << left << setw(15) << setfill(' ') << subjects[0]
+             << " | " << setw(15) << currentStudent.marks[0] << " | " << setw(15) << calculateGrade(grade[index][0]) << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+        cout << " | " << setw(15) << subjects[1]
+             << " | " << setw(15) << currentStudent.marks[1] << " | " << setw(15) << calculateGrade(grade[index][1]) << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+        cout << " | " << setw(15) << subjects[2]
+             << " | " << setw(15) << currentStudent.marks[2] << " | " << setw(15) << calculateGrade(grade[index][2]) << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+        cout << " | " << setw(15) << subjects[3]
+             << " | " << setw(15) << currentStudent.marks[3] << " | " << setw(15) << calculateGrade(grade[index][3]) << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
+        cout << " | " << setw(15) << subjects[4]
+             << " | " << setw(15) << currentStudent.marks[4] << " | " << setw(15) << calculateGrade(grade[index][4]) << " | " << endl;
+        cout << " -------------------------------------------------------" << endl;
     }
+    cout << endl;
+    cout << "GRADE CUT OFF TABLE" << endl;
+    showGradeDistribution(subjects, avg, sdData);
 }
 
 void gradeDistribution(string subject, float mean, float sd)
 {
-    cout << setw(5) << setfill(' ') << subject
-         << setw(5) << " >= " << ceil(mean + 1.5 * sd)
-         << setw(5) << " >= " << ceil(mean + .5 * sd) << " and < " << ceil(mean + 1.5 * sd)
-         << setw(5) << " >= " << ceil(mean - .5 * sd) << " and < " << ceil(mean + .5 * sd)
-         << setw(5) << " >= " << ceil(mean - sd) << " and < " << ceil(mean - .5 * sd)
-         << setw(5) << " >= " << ceil(mean - 1.5 * sd) << " and < " << ceil(mean - sd)
-         << setw(5) << " >= " << ceil(mean - 2 * sd) << " and < " << ceil(mean - 1.5 * sd)
-         << setw(5) << " <" << ceil(mean - 2 * sd) << endl;
+    cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
+         << setw(5) << " >= " << ceil(mean + 1.5 * sd) << " | "
+         << setw(5) << " >= " << ceil(mean + .5 * sd) << " and < " << ceil(mean + 1.5 * sd) << " | "
+         << setw(5) << " >= " << ceil(mean - .5 * sd) << " and < " << ceil(mean + .5 * sd) << " | "
+         << setw(5) << " >= " << ceil(mean - sd) << " and < " << ceil(mean - .5 * sd) << " | "
+         << setw(5) << " >= " << ceil(mean - 1.5 * sd) << " and < " << ceil(mean - sd) << " | "
+         << setw(5) << " >= " << ceil(mean - 2 * sd) << " and < " << ceil(mean - 1.5 * sd) << " | "
+         << setw(5) << " < " << ceil(mean - 2 * sd) << " | " << endl;
 }
 
-void showGradeDistribution(string subjects[], int means[], int sds[])
+void showGradeDistribution(string subjects[], float means[], float sds[])
 {
-    cout << setw(5) << setfill(' ') << "Subject"
+    tableSeperator();
+    cout << "| " << left << setw(8) << setfill(' ') << "Subject"
+         << " | " << right
          << setw(5) << "      "
          << "S"
+         << " | "
          << setw(5) << "               "
          << "A"
+         << " | "
          << setw(5) << "               "
          << "B"
+         << " | "
          << setw(5) << "               "
          << "C"
+         << " | "
          << setw(5) << "               "
          << "D"
+         << " | "
          << setw(5) << "               "
          << "E"
-         << setw(5) << "F" << endl;
+         << " | "
+         << "  "
+         << setw(5) << "F"
+         << " | " << endl;
     for (int i = 0; i < 5; i++)
-        gradeDistribution(subjects[i], means[i], sds[i]);
+        tableSeperator(), gradeDistribution(subjects[i], means[i], sds[i]);
+    tableSeperator();
     seperator();
+}
+void studentMenu()
+{
+    seperator();
+    int choice;
+    cout << "1. View My Marks" << endl;
+    cout << "2. View Statistics" << endl;
+    cout << "3. Logout" << endl;
+    cout << "Enter your choice: ";
+    cin >> choice;
+    seperator();
+    if (choice == 3)
+    {
+        cout << "Successfully logged out..." << endl;
+        exit(0);
+    }
+    switch (choice)
+    {
+    case 1:
+        showMarks(2);
+        break;
+    default:
+        cout << "Invalid choice." << endl;
+        break;
+    }
 }
 /* ************* end of function definitions ************* */
