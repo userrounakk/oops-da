@@ -468,21 +468,12 @@ void showMarks(int usertype)
             << " | " << setw(15) << "Grade Obtained"
             << " | " << endl;
         cout << " -------------------------------------------------------" << endl;
-        cout << " | " << left << setw(15) << setfill(' ') << subjects[0]
-             << " | " << setw(15) << currentStudent.marks[0] << " | " << setw(15) << calculateGrade(grade[index][0]) << " | " << endl;
-        cout << " -------------------------------------------------------" << endl;
-        cout << " | " << setw(15) << subjects[1]
-             << " | " << setw(15) << currentStudent.marks[1] << " | " << setw(15) << calculateGrade(grade[index][1]) << " | " << endl;
-        cout << " -------------------------------------------------------" << endl;
-        cout << " | " << setw(15) << subjects[2]
-             << " | " << setw(15) << currentStudent.marks[2] << " | " << setw(15) << calculateGrade(grade[index][2]) << " | " << endl;
-        cout << " -------------------------------------------------------" << endl;
-        cout << " | " << setw(15) << subjects[3]
-             << " | " << setw(15) << currentStudent.marks[3] << " | " << setw(15) << calculateGrade(grade[index][3]) << " | " << endl;
-        cout << " -------------------------------------------------------" << endl;
-        cout << " | " << setw(15) << subjects[4]
-             << " | " << setw(15) << currentStudent.marks[4] << " | " << setw(15) << calculateGrade(grade[index][4]) << " | " << endl;
-        cout << " -------------------------------------------------------" << endl;
+        for (int i = 0; i < 5; i++)
+        {
+            cout << " | " << left << setw(15) << setfill(' ') << subjects[i]
+                 << " | " << setw(15) << currentStudent.marks[i] << " | " << setw(15) << calculateGrade(grade[index][i]) << " | " << endl;
+            cout << " -------------------------------------------------------" << endl;
+        }
     }
     cout << endl;
     cout << "GRADE CUT OFF TABLE" << endl;
@@ -530,10 +521,11 @@ void showGradeDistribution(string subjects[], float means[], float sds[])
     for (int i = 0; i < 5; i++)
         tableSeperator(), gradeDistribution(subjects[i], means[i], sds[i]);
     tableSeperator();
-    seperator();
 }
 void showStatistics()
 {
+    cout << "Class Statistics" << endl
+         << endl;
     int marks[5][35];
     float avg[5];
     float sdData[5];
@@ -584,9 +576,11 @@ void studentMenu()
         switch (choice)
         {
         case 1:
+            system("clear");
             showMarks(2);
             break;
         case 2:
+            system("clear");
             showStatistics();
             break;
         default:
