@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <iomanip>
 #define totalStudents 350
 using namespace std;
 
@@ -330,7 +331,8 @@ int passCheck(string line, string id)
         end = line.find(",", start);
         data[i++] = line.substr(start, end - start);
     } while (end != -1);
-    data[1] = data[1].substr(0, data[1].length() - 1);
+    if (data[1][data[1].length() - 1] == '\r')
+        data[1] = data[1].substr(0, data[1].length() - 1);
     if (data[0] == id)
     {
         cout << "Enter your password: ";
@@ -366,18 +368,36 @@ float sd(int data[], int n)
 
 int calculateGradePoint(int marks, int mean, int sd)
 {
-    if (marks >= ceil(mean + 1.5 * sd))
-        return 10;
-    else if (marks >= ceil(mean + .5 * sd))
-        return 9;
-    else if (marks >= ceil(mean - .5 * sd))
-        return 8;
-    else if (marks >= ceil(mean - sd))
-        return 7;
-    else if (marks >= ceil(mean - 1.5 * sd))
-        return 6;
-    else if (marks >= ceil(mean - 2 * sd))
-        return 5;
+    if ((floor(mean) + 1.5 * floor(sd)) < 98)
+    {
+        if (marks >= floor(floor(mean) + 1.5 * floor(sd)))
+            return 10;
+        else if (marks >= floor(floor(mean) + 0.5 * floor(sd)))
+            return 9;
+        else if (marks >= floor(floor(mean) - 0.5 * floor(sd)))
+            return 8;
+        else if (marks >= floor(floor(mean) - floor(sd)))
+            return 7;
+        else if (marks >= floor(floor(mean) - 1.5 * floor(sd)))
+            return 6;
+        else if (marks >= 25)
+            return 5;
+    }
+    else
+    {
+        if (marks >= floor(floor(mean) + floor(sd)))
+            return 10;
+        else if (marks >= floor(floor(mean) + 0.5 * floor(sd)))
+            return 9;
+        else if (marks >= floor(floor(mean) - 0.5 * floor(sd)))
+            return 8;
+        else if (marks >= floor(floor(mean) - floor(sd)))
+            return 7;
+        else if (marks >= floor(floor(mean) - 1.5 * floor(sd)))
+            return 6;
+        else if (marks >= 25)
+            return 5;
+    }
     return 0;
 }
 
@@ -497,16 +517,37 @@ void showMarks(int usertype)
 
 void gradeDistribution(string subject, float mean, float sd)
 {
-    cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
-         << setw(5) << " >= " << ceil(mean + 1.5 * sd) << " | "
-         << setw(5) << " >= " << ceil(mean + .5 * sd) << " and < " << ceil(mean + 1.5 * sd) << " | "
-         << setw(5) << " >= " << ceil(mean - .5 * sd) << " and < " << ceil(mean + .5 * sd) << " | "
-         << setw(5) << " >= " << ceil(mean - sd) << " and < " << ceil(mean - .5 * sd) << " | "
-         << setw(5) << " >= " << ceil(mean - 1.5 * sd) << " and < " << ceil(mean - sd) << " | "
-         << setw(5) << " >= " << ceil(mean - 2 * sd) << " and < " << ceil(mean - 1.5 * sd) << " | "
-         << setw(5) << " < " << ceil(mean - 2 * sd) << " | " << endl;
+    if (floor(mean) + 1.5 * floor(sd) < 98)
+    {
+        cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
+             << setw(5) << " >= " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 0.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - floor(sd)) << " and < " << floor(floor(mean) - 0.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - 1.5 * floor(sd)) << " and < " << floor(floor(mean) - floor(sd)) << " | "
+             << setw(5) << " >= "
+             << "25"
+             << " and < " << floor(floor(mean) - 1.5 * floor(sd)) << " | "
+             << setw(5) << " < "
+             << "25"
+             << " | " << endl;
+    }
+    else
+    {
+        cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
+             << setw(5) << " >= " << floor(floor(mean) + floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 0.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - floor(sd)) << " and < " << floor(floor(mean) - 0.5 * floor(sd)) << " | "
+             << setw(5) << " >= " << floor(floor(mean) - 1.5 * floor(sd)) << " and < " << floor(floor(mean) - floor(sd)) << " | "
+             << setw(5) << " >= "
+             << "25"
+             << " and < " << floor(floor(mean) - 1.5 * floor(sd)) << " | "
+             << setw(5) << " < "
+             << "25"
+             << " | " << endl;
+    }
 }
-
 void showGradeDistribution(string subjects[], float means[], float sds[])
 {
     tableSeperator();
@@ -567,7 +608,7 @@ void showStatistics()
     for (int i = 0; i < 5; i++)
     {
         cout << " | " << left << setw(15) << setfill(' ') << subjects[i]
-             << " | " << setw(15) << avg[i] << " | " << setw(15) << sdData[i] << " | " << endl;
+             << " | " << setprecision(6) << setw(15) << avg[i] << " | " << setw(15) << sdData[i] << " | " << endl;
         cout << " -------------------------------------------------------" << endl;
     }
 }
