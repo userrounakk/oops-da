@@ -764,11 +764,12 @@ void teacherMenu()
         cout << "2. View Class Marks" << endl;
         cout << "3. View Marks of an individual student" << endl;
         cout << "4. Edit Marks of a student" << endl;
-        cout << "5. Logout" << endl;
+        cout << "5. View Statistics" << endl;
+        cout << "6. Logout" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         seperator();
-        if (choice == 5)
+        if (choice == 6)
         {
             cout << "Successfully logged out..." << endl;
             exit(0);
@@ -790,6 +791,10 @@ void teacherMenu()
         case 4:
             system("clear");
             updateMarks();
+            break;
+        case 5:
+            system("clear");
+            showStatistics();
             break;
         default:
             cout << "Invalid choice." << endl;
