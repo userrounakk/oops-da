@@ -640,6 +640,11 @@ void updateMarks()
                 int marks;
                 cout << "Enter the marks for " << subjects[choice - 1] << ": ";
                 cin >> marks;
+                if (marks > 100)
+                {
+                    cout << "Marks cannot be more than 100." << endl;
+                    continue;
+                }
                 update.marks[choice - 1] = marks;
                 for (int i = 0; i < 5; i++)
                 {
