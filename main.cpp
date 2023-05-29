@@ -22,7 +22,7 @@ float mean(int data[], int n);                                             // ca
 float sd(int data[], int n);                                               // calculate sd of data
 int calculateGradePoint(int marks, int mean, int sd);                      // calculate grade point
 char calculateGrade(int gradePoint);                                       // calculate grade
-float showMarks(int usertype, int id = 0);                                 // display marks of all students of a class
+float showMarks(int usertype);                                             // display marks of all students of a class
 void gradeDistribution(string subject, float mean, float sd);              // show grade cut offs for subjects
 void showGradeDistribution(string subjects[], float means[], float sds[]); // layout for grade cut off table
 void showStatistics();                                                     // show class statistics
@@ -369,6 +369,8 @@ float sd(int data[], int n)
 
 int calculateGradePoint(int marks, int mean, int sd)
 {
+    int d = floor(floor(mean) - floor(sd));
+    int ld = floor((d + 25) / 2);
     if ((floor(mean) + 1.5 * floor(sd)) < 98)
     {
         if (marks >= floor(floor(mean) + 1.5 * floor(sd)))
@@ -377,9 +379,9 @@ int calculateGradePoint(int marks, int mean, int sd)
             return 9;
         else if (marks >= floor(floor(mean) - 0.5 * floor(sd)))
             return 8;
-        else if (marks >= floor(floor(mean) - floor(sd)))
+        else if (marks >= d)
             return 7;
-        else if (marks >= floor(floor(mean) - 1.5 * floor(sd)))
+        else if (marks >= ld)
             return 6;
         else if (marks >= 25)
             return 5;
@@ -392,9 +394,9 @@ int calculateGradePoint(int marks, int mean, int sd)
             return 9;
         else if (marks >= floor(floor(mean) - 0.5 * floor(sd)))
             return 8;
-        else if (marks >= floor(floor(mean) - floor(sd)))
+        else if (marks >= d)
             return 7;
-        else if (marks >= floor(floor(mean) - 1.5 * floor(sd)))
+        else if (marks >= ld)
             return 6;
         else if (marks >= 25)
             return 5;
@@ -408,13 +410,14 @@ char calculateGrade(int gradePoint)
     return gradePoint == 0 ? 'F' : grades[10 - gradePoint];
 }
 
-float showMarks(int usertype, int id)
+float showMarks(int usertype)
 {
     int marks[5][35];
     float avg[5];
     float sdData[5];
     int grade[35][5];
     float gpa[35];
+    int index = 0;
     for (int i = 0; i < 35; i++)
     {
         marks[0][i] = currentTeacher.myStudents[i].marks[0];
@@ -486,7 +489,6 @@ float showMarks(int usertype, int id)
     }
     else if (usertype == 2)
     {
-        int index;
         for (int i = 0; i < 35; i++)
             if (currentStudent.getReg() == currentTeacher.myStudents[i].getReg())
             {
@@ -514,37 +516,42 @@ float showMarks(int usertype, int id)
     cout << endl;
     cout << "GRADE CUT OFF TABLE" << endl;
     showGradeDistribution(subjects, avg, sdData);
-    return gpa[id];
+    return gpa[index];
 }
 
 void gradeDistribution(string subject, float mean, float sd)
 {
     if (floor(mean) + 1.5 * floor(sd) < 98)
     {
-        cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
-             << setw(5) << " >= " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
-             << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
-             << setw(5) << " >= " << floor(floor(mean) - 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 0.5 * floor(sd)) << " | "
-             << setw(5) << " >= " << floor(floor(mean) - floor(sd)) << " and < " << floor(floor(mean) - 0.5 * floor(sd)) << " | "
-             << setw(5) << " >= " << floor(floor(mean) - 1.5 * floor(sd)) << " and < " << floor(floor(mean) - floor(sd)) << " | "
-             << setw(5) << " >= "
-             << "25"
-             << " and < " << floor(floor(mean) - 1.5 * floor(sd)) << " | "
-             << setw(5) << " < "
-             << "25"
-             << " | " << endl;
+        int d = floor(floor(mean) - floor(sd));
+        int ld = floor((d + 25) / 2);
+        cout
+            << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
+            << setw(5) << " >= " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
+            << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
+            << setw(5) << " >= " << floor(floor(mean) - 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 0.5 * floor(sd)) << " | "
+            << setw(5) << " >= " << d << " and < " << floor(floor(mean) - 0.5 * floor(sd)) << " | "
+            << setw(5) << " >= " << ld << " and < " << d << " | "
+            << setw(5) << " >= "
+            << "25"
+            << " and < " << ld << " | "
+            << setw(5) << " < "
+            << "25"
+            << " | " << endl;
     }
     else
     {
+        int d = floor(floor(mean) - floor(sd));
+        int ld = floor((d + 25) / 2);
         cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
              << setw(5) << " >= " << floor(floor(mean) + floor(sd)) << " | "
              << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + floor(sd)) << " | "
              << setw(5) << " >= " << floor(floor(mean) - 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 0.5 * floor(sd)) << " | "
              << setw(5) << " >= " << floor(floor(mean) - floor(sd)) << " and < " << floor(floor(mean) - 0.5 * floor(sd)) << " | "
-             << setw(5) << " >= " << floor(floor(mean) - 1.5 * floor(sd)) << " and < " << floor(floor(mean) - floor(sd)) << " | "
+             << setw(5) << " >= " << ld << " and < " << d << " | "
              << setw(5) << " >= "
              << "25"
-             << " and < " << floor(floor(mean) - 1.5 * floor(sd)) << " | "
+             << " and < " << ld << " | "
              << setw(5) << " < "
              << "25"
              << " | " << endl;
@@ -741,7 +748,7 @@ void studentMenu()
         switch (choice)
         {
         case 1:
-            cout << currentStudent << endl;
+            cout << setprecision(3) << currentStudent << endl;
             break;
         case 2:
             system("clear");
@@ -809,9 +816,9 @@ ostream &operator<<(ostream &output, Student s)
             index = i;
             break;
         }
-    float gpa = showMarks(2, index);
+    float gpa = showMarks(2);
     system("clear");
-    output << "Name: " << s.name << "\nReg No: " << s.reg << "\nGPA: " << gpa;
+    output << setprecision(3) << "Name: " << s.name << "\nReg No: " << s.reg << "\nGPA: " << gpa;
     return output;
 }
 /* ************* end of function definitions ************* */
