@@ -360,7 +360,7 @@ float mean(int data[], int n)
 float sd(int data[], int n)
 {
     float m = mean(data, n);
-    float sum;
+    float sum = 0;
     for (int i = 0; i < n; i++)
         sum += pow(m - data[i], 2);
     return sqrt(sum / (n - 1));
@@ -519,6 +519,7 @@ void gradeDistribution(string subject, float mean, float sd)
 {
     if (floor(mean) + 1.5 * floor(sd) < 98)
     {
+        cout << "if" << endl;
         cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
              << setw(5) << " >= " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
              << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + 1.5 * floor(sd)) << " | "
@@ -534,6 +535,7 @@ void gradeDistribution(string subject, float mean, float sd)
     }
     else
     {
+        cout << "else" << endl;
         cout << "| " << left << setw(8) << setfill(' ') << subject << " | " << right
              << setw(5) << " >= " << floor(floor(mean) + floor(sd)) << " | "
              << setw(5) << " >= " << floor(floor(mean) + 0.5 * floor(sd)) << " and < " << floor(floor(mean) + floor(sd)) << " | "
