@@ -22,7 +22,7 @@ float mean(int data[], int n);                                             // ca
 float sd(int data[], int n);                                               // calculate sd of data
 int calculateGradePoint(int marks, int mean, int sd);                      // calculate grade point
 char calculateGrade(int gradePoint);                                       // calculate grade
-void showMarks(int usertype);                                              // display marks of all students of a class
+float showMarks(int usertype, int id = 0);                                 // display marks of all students of a class
 void gradeDistribution(string subject, float mean, float sd);              // show grade cut offs for subjects
 void showGradeDistribution(string subjects[], float means[], float sds[]); // layout for grade cut off table
 void showStatistics();                                                     // show class statistics
@@ -83,6 +83,7 @@ public:
     {
         return id;
     }
+    friend ostream &operator<<(ostream &output, Student s);
 };
 
 Student students[totalStudents];
@@ -407,7 +408,7 @@ char calculateGrade(int gradePoint)
     return gradePoint == 0 ? 'F' : grades[10 - gradePoint];
 }
 
-void showMarks(int usertype)
+float showMarks(int usertype, int id)
 {
     int marks[5][35];
     float avg[5];
@@ -513,6 +514,7 @@ void showMarks(int usertype)
     cout << endl;
     cout << "GRADE CUT OFF TABLE" << endl;
     showGradeDistribution(subjects, avg, sdData);
+    return gpa[id];
 }
 
 void gradeDistribution(string subject, float mean, float sd)
@@ -693,9 +695,8 @@ void updateMarks()
                 ifstream fin;
                 string lines[350];
                 fin.open("student-record.csv");
-                int i = 0;
-                while (getline(fin, lines[i]))
-                    i++;
+                for (int i = 0; i < 350; i++)
+                    getline(fin, lines[i]);
                 fin.close();
                 ofstream fio;
                 fio.open("student-record.csv");
@@ -725,13 +726,14 @@ void studentMenu()
     {
         seperator();
         int choice;
-        cout << "1. View My Marks" << endl;
-        cout << "2. View Statistics" << endl;
-        cout << "3. Logout" << endl;
+        cout << "1. My Details" << endl;
+        cout << "2. View My Marks" << endl;
+        cout << "3. View Statistics" << endl;
+        cout << "4. Logout" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         seperator();
-        if (choice == 3)
+        if (choice == 4)
         {
             cout << "Successfully logged out..." << endl;
             exit(0);
@@ -739,10 +741,13 @@ void studentMenu()
         switch (choice)
         {
         case 1:
+            cout << currentStudent << endl;
+            break;
+        case 2:
             system("clear");
             showMarks(2);
             break;
-        case 2:
+        case 3:
             system("clear");
             showStatistics();
             break;
@@ -762,12 +767,11 @@ void teacherMenu()
         cout << "2. View Class Marks" << endl;
         cout << "3. View Marks of an individual student" << endl;
         cout << "4. Edit Marks of a student" << endl;
-        cout << "5. View Statistics" << endl;
-        cout << "6. Logout" << endl;
+        cout << "5. Logout" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         seperator();
-        if (choice == 6)
+        if (choice == 5)
         {
             cout << "Successfully logged out..." << endl;
             exit(0);
@@ -790,14 +794,24 @@ void teacherMenu()
             system("clear");
             updateMarks();
             break;
-        case 5:
-            system("clear");
-            showStatistics();
-            break;
         default:
             cout << "Invalid choice." << endl;
             break;
         }
     }
+}
+ostream &operator<<(ostream &output, Student s)
+{
+    int index;
+    for (int i = 0; i < 350; i++)
+        if (s.reg == students[i].getReg())
+        {
+            index = i;
+            break;
+        }
+    float gpa = showMarks(2, index);
+    system("clear");
+    output << "Name: " << s.name << "\nReg No: " << s.reg << "\nGPA: " << gpa;
+    return output;
 }
 /* ************* end of function definitions ************* */
