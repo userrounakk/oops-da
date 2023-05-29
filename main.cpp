@@ -43,11 +43,6 @@ class Teacher;
 
 /* ************* class definitions ************* */
 
-/*
- * TODO: Use scope resolution and define class functions at bottom
- * TODO: Operator overloading
- */
-
 class Class
 {
 protected:
@@ -71,18 +66,9 @@ public:
         for (int i = 0; i < 5; i++)
             marks[i] = stof(data[i + 3]);
     }
-    string getName()
-    {
-        return name;
-    }
-    string getReg()
-    {
-        return reg;
-    }
-    string getClass()
-    {
-        return id;
-    }
+    string getName();
+    string getReg();
+    string getClass();
     friend ostream &operator<<(ostream &output, Student s);
 };
 
@@ -95,48 +81,12 @@ class Teacher : public Class
 
 public:
     Student myStudents[35];
-    Teacher()
-    {
-        studentCount = 0;
-    }
-    void addData(string data[], int n)
-    {
-        emp_id = data[0];
-        name = data[1];
-        id = to_string(n + 1);
-        for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
-            if ((students[i].getClass()) == (id))
-                myStudents[studentCount++] = students[i];
-    }
-    string getId()
-    {
-        return id;
-    }
-    string getEmpId()
-    {
-        return emp_id;
-    }
-    string getName()
-    {
-        return name;
-    }
-    void showStudents()
-    {
-        cout << " ---------------------------------------" << endl;
-        cout << " | " << left << setw(12) << setfill(' ') << "Reg No"
-             << " | "
-             << setw(20) << "Name"
-             << " | " << endl;
-        cout << " ---------------------------------------" << endl;
-        for (int i = 0; i < studentCount; i++)
-        {
-            cout << " | " << left << setw(12) << setfill(' ') << myStudents[i].getReg()
-                 << " | "
-                 << setw(20) << myStudents[i].getName()
-                 << " | " << endl;
-            cout << " ---------------------------------------" << endl;
-        }
-    }
+    Teacher();
+    void addData(string data[], int n);
+    string getId();
+    string getEmpId();
+    string getName();
+    void showStudents();
 };
 
 /* ************* end of class definitions ************* */
@@ -822,3 +772,63 @@ ostream &operator<<(ostream &output, Student s)
     return output;
 }
 /* ************* end of function definitions ************* */
+
+/* ************* class function definitions ************* */
+// STUDENT CLASS FUNCTIONS
+string Student::getName()
+{
+    return name;
+}
+string Student::getReg()
+{
+    return reg;
+}
+string Student::getClass()
+{
+    return id;
+}
+
+// TEACHER CLASS FUCTIONS
+Teacher::Teacher()
+{
+    studentCount = 0;
+}
+void Teacher::addData(string data[], int n)
+{
+    emp_id = data[0];
+    name = data[1];
+    id = to_string(n + 1);
+    for (int i = 35 * (10 - n - 1); i < 35 * (10 - n); i++)
+        if ((students[i].getClass()) == (id))
+            myStudents[studentCount++] = students[i];
+}
+string Teacher::getId()
+{
+    return id;
+}
+string Teacher::getEmpId()
+{
+    return emp_id;
+}
+string Teacher::getName()
+{
+    return name;
+}
+void Teacher::showStudents()
+{
+    cout << " ---------------------------------------" << endl;
+    cout << " | " << left << setw(12) << setfill(' ') << "Reg No"
+         << " | "
+         << setw(20) << "Name"
+         << " | " << endl;
+    cout << " ---------------------------------------" << endl;
+    for (int i = 0; i < studentCount; i++)
+    {
+        cout << " | " << left << setw(12) << setfill(' ') << myStudents[i].getReg()
+             << " | "
+             << setw(20) << myStudents[i].getName()
+             << " | " << endl;
+        cout << " ---------------------------------------" << endl;
+    }
+}
+/* ************* end of class function definitions ************* */
