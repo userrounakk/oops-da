@@ -4,6 +4,11 @@
 #include <math.h>
 #include <iomanip>
 #define totalStudents 350
+#ifdef _WIN32
+#define CLEAR_SCREEN "cls"
+#else
+#define CLEAR_SCREEN "clear"
+#endif
 using namespace std;
 
 /* ************* function declarations ************* */
@@ -707,11 +712,11 @@ void studentMenu()
             cout << setprecision(3) << currentStudent << endl;
             break;
         case 2:
-            system("clear");
+            system(CLEAR_SCREEN);
             showMarks(2);
             break;
         case 3:
-            system("clear");
+            system(CLEAR_SCREEN);
             showStatistics();
             break;
         default:
@@ -742,19 +747,19 @@ void teacherMenu()
         switch (choice)
         {
         case 1:
-            system("clear");
+            system(CLEAR_SCREEN);
             currentTeacher.showStudents();
             break;
         case 2:
-            system("clear");
+            system(CLEAR_SCREEN);
             showMarks(1);
             break;
         case 3:
-            system("clear");
+            system(CLEAR_SCREEN);
             individualMarks();
             break;
         case 4:
-            system("clear");
+            system(CLEAR_SCREEN);
             updateMarks();
             break;
         default:
@@ -773,7 +778,7 @@ ostream &operator<<(ostream &output, Student s)
             break;
         }
     float gpa = showMarks(2);
-    system("clear");
+    system(CLEAR_SCREEN);
     output << setprecision(3) << "Name: " << s.name << "\nReg No: " << s.reg << "\nGPA: " << gpa;
     return output;
 }
