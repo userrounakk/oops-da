@@ -102,6 +102,7 @@ string subjects[] = {"English", "Maths", "Science", "Computer", "Social"};
 
 int main()
 {
+    cout << "Disclaimer: Run the code in full screen for best results" << endl;
     getStudents();
     getTeachers();
     int choice;
