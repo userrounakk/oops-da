@@ -45,7 +45,7 @@ git clone https://github.com/userrounakk/oops-da.git
 ## Contributors
 
 **Contributor Name** &nbsp; : &nbsp;Miskat Alam <br>
-**GitHub URI** &nbsp; &nbsp; &nbsp; : &nbsp; [misky0301](https://github.com/misky0301) <br><br>
+**GitHub URI** &nbsp; &nbsp; &nbsp; : &nbsp; [misky0310](https://github.com/misky0310) <br><br>
 **Contributor Name** &nbsp; : &nbsp;Aditya Chaudhary <br>
 **GitHub URI** &nbsp; &nbsp; &nbsp; : &nbsp; [Aditya7842](https://github.com/Aditya7842)
 
